@@ -1,8 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import * as Location  from 'expo-location';
 import * as TaskManager from 'expo-task-manager';
+import * as Notifications from 'expo-notifications';
+
+
+
+
 
 
 export default function App() {
@@ -55,61 +60,37 @@ export default function App() {
       text = JSON.stringify(location);
     }
  
-    // Schedule a notification
-    const [notification, setNotification] = useState(false);
-    const [notificationResponse, setNotificationResponse] = useState(null);
 
-    useEffect(() => {
-      const backgroundSubscription = Notifications.addNotificationResponseReceivedListener(response => {
-        setNotificationResponse(response);
-      });
 
-      const foregroundSubscription = Notifications.addNotificationReceivedListener(notification => {
-        setNotification(notification);
-      });
+    return (
+      <View style={styles.container}>
+        <Text style={styles.paragraph}>{text}</Text>
+        <StatusBar style="auto" />
+      </View>
       
-      return () => {
-        backgroundSubscription.remove();
-        foregroundSubscription.remove();
-      };
-    }, []);
 
-    useEffect(() => {
-      (async () => {
-        await Notifications.scheduleNotificationAsync({
-          content: {
-            title: "You've got mail! 📬",
-            body: 'Here is the notification body',
-            data: { data: 'goes here' },
-          },
-          trigger: { seconds: 2 },
-        });
-      })();
-    }, []);
+    );
+  }
+
+
+    const styles = StyleSheet.create({
+      container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
+      text: {
+        fontSize: 20,
+        fontWeight: 'bold',
+      },
+      paragraph: {
+        margin: 24,
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center',
+      },
 
     
     
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{text}</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
-
-   
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-
-
-});
+    });
